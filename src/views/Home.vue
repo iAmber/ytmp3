@@ -1,5 +1,5 @@
 <template>
-  <div class="home" :class="isMobile? 'mobile' : 'pc'">
+  <div class="home" :class="[isMobile? 'mobile' : 'pc', mode]">
     <div class="title">
       <div class="home-btn">HOME</div>
       <div class="theme-btn" @click="changeTheme">THEME[DARK]</div>
@@ -17,7 +17,7 @@
         <div class="rank-video"></div>
         <div class="desc">
           <div class="desc-left">
-            <div class="desc-title">{{item.title}}23333233332333323333233332333323333</div>
+            <div class="desc-title">{{item.title}}</div>
             <div class="desc-score">{{item.score}}K views</div>
           </div>
           <div class="desc-right">
@@ -42,6 +42,7 @@ export default {
     return {
       list: [],
       country: '',
+      mode: 'light',
       ipList: [
         'https://154.82.111.45.nip.io',
         'https://154.82.111.41.sslip.io',
@@ -80,7 +81,7 @@ export default {
           ...item,
           // eslint-disable-next-line prefer-template
           url: 'https://www.youtube.com/watch?v=' + item.key,
-        }));
+        })).slice(0, 12);
       }
     },
     getRandomIp() {
@@ -89,7 +90,7 @@ export default {
       return this.ipList[index];
     },
     changeTheme() {
-      // TODO
+      this.mode = 'dark';
     },
     copyUrl() {
       const clipboard = new Clipboard('.copy-btn');
@@ -107,20 +108,28 @@ export default {
 
 </script>
 <style>
+.home.dark {
+  background-color: red;
+}
 .title{
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #0287CF;
+  font-family: Roboto-Regular;
+  font-size: 14px;
+  font-weight: 400;
 }
 .title .home-btn {
   margin-right: 20px;
   cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 .title .theme-btn {
   margin-right: 20px;
   cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 .logo {
   display: flex;
@@ -167,10 +176,13 @@ export default {
   color: #FFFFFF;
   text-align: center;
   font-weight: 500;
+  z-index: 9999;
 }
 .rank-item .rank-video {
   height: 176px;
-
+}
+.rank-item .rank-video video {
+  width: 100%;
 }
 .rank-item .desc .desc-left{
   max-width: calc(100% - 36px);
@@ -184,6 +196,8 @@ export default {
   font-weight: 700;
   margin-top: 12px;
   margin-bottom: 4px;
+  height: 18px;
+  overflow: hidden;
 }
 
 .rank-item .desc .desc-score {
@@ -222,7 +236,7 @@ export default {
 }
 .pc .rank-list{
   display: flex;
-  width: 1020px;
+  width: 940px;
   margin-left: auto;
   margin-right: auto;
   flex-wrap: wrap;
@@ -230,9 +244,11 @@ export default {
 .pc .rank-item {
   margin-left: 0;
   margin-right: 20px;
-  flex: 1;
-  width: 240px;
+  width: 220px;
   box-sizing: border-box;
+}
+.pc .rank-video {
+  height: 124px;
 }
 .pc .rank-item:nth-child(4n){
   margin-right: 0;

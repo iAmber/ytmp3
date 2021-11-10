@@ -1,7 +1,7 @@
 <template>
   <div class="home" :class="[isMobile? 'mobile' : 'pc', mode]">
     <div class="title">
-      <div class="home-btn">HOME</div>
+      <div class="home-btn" @click="refresh">HOME</div>
       <div class="theme-btn" @click="changeTheme">THEME[DARK]</div>
     </div>
     <img v-if="isMobile" class="logo" src="../assets/img/logo200x50.png" />
@@ -14,7 +14,9 @@
         class="rank-item"
       >
         <div class="rank-index">No.{{index + 1}}</div>
-        <div class="rank-video"></div>
+        <div class="rank-video">
+          <youtube :video-id="item.key" ref="youtube" @playing="playing" @click="playVideo" />
+        </div>
         <div class="desc">
           <div class="desc-left">
             <div class="desc-title">{{item.title}}</div>
@@ -59,12 +61,24 @@ export default {
   components: {
   },
   computed: {
+    player() {
+      return this.$refs.youtube.player;
+    },
   },
   async mounted() {
     await this.getCountryCode();
     this.getList();
   },
   methods: {
+    playVideo() {
+      this.player.playVideo();
+    },
+    playing() {
+      console.log('we are watching!!!');
+    },
+    refresh() {
+      this.$router.go(0);
+    },
     async getCountryCode() {
       const url = 'https://ads-website.ytsservice.com/ads/address/country';
       const { data, status } = await axios.get(url);
@@ -181,9 +195,11 @@ export default {
 .rank-item .rank-video {
   height: 176px;
 }
-.rank-item .rank-video video {
+.rank-item .rank-video iframe {
   width: 100%;
+  height: 176px;
 }
+
 .rank-item .desc .desc-left{
   max-width: calc(100% - 36px);
   overflow-x: hidden;
@@ -248,6 +264,10 @@ export default {
   box-sizing: border-box;
 }
 .pc .rank-video {
+  height: 124px;
+}
+.pc .rank-video iframe {
+  width: 220px;
   height: 124px;
 }
 .pc .rank-item:nth-child(4n){

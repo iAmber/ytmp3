@@ -24,14 +24,22 @@
             <div class="desc-score">{{item.score}}K views</div>
           </div>
           <div class="desc-right">
-            <img class="copy-btn"
-            src="../assets/img/copy.png"
-            :data-clipboard-text="item.url"
-            @click="copyUrl($event,item.url)" />
+            <div
+              class="copy-btn"
+              :data-clipboard-text="item.url"
+              @click="copyUrl($event,item.url)"
+            >Copy</div>
           </div>
         </div>
       </div>
     </div>
+    <van-divider />
+    <div class="footer link">
+      <a href="https://ytmp3.cc/copyright-claims/">Copyright Claims</a>
+      <a href="https://ytmp3.cc/privacy-policy/">Privacy Policy</a>
+      <a href="https://ytmp3.cc/terms-of-use/">Terms of use</a>
+    </div>
+    <div class="footer">support@ytmp3.zone</div>
   </div>
 </template>
 
@@ -39,6 +47,10 @@
 import axios from 'axios';
 import Clipboard from 'clipboard';
 import lottie from 'lottie-web';
+import Toast from 'vant/lib/toast';
+import Divider from 'vant/lib/divider';
+import 'vant/lib/toast/style';
+import 'vant/lib/divider/style';
 import datajson from '../assets/flag.json';
 
 export default {
@@ -62,6 +74,8 @@ export default {
     };
   },
   components: {
+    [Toast.name]: Toast,
+    [Divider.name]: Divider,
   },
   computed: {
     player() {
@@ -128,7 +142,7 @@ export default {
     copyUrl() {
       const clipboard = new Clipboard('.copy-btn');
       clipboard.on('success', () => {
-        console.log('复制成功');
+        Toast('Video URL copied to clipboard');
         clipboard.destroy(); // 释放内存
       });
       clipboard.on('error', () => {
@@ -141,11 +155,20 @@ export default {
 
 </script>
 <style>
+.home {
+  padding-bottom: 50px;
+}
 .home.dark {
   background-color: #162541;
 }
 .home.dark .rank-title{
-  color: #fff;
+  color: #fff !important;
+}
+.home.dark .desc {
+  color: #fff !important;
+}
+.home.dark .desc .copy-btn{
+  color: #fff !important;
 }
 .home.dark .rank-item{
   border: 1px solid #121D31;
@@ -263,9 +286,23 @@ export default {
 }
 
 .rank-item .desc .copy-btn {
-  width: 24px;
-  height: 24px;
   cursor: pointer;
+  color: #0287CF;
+  font-size: 14px;
+  font-weight: 700;
+}
+.footer {
+  color: #979494;
+  font-size: 14px;
+  text-align: center;
+}
+.footer.link {
+  margin: 5px auto 8px;
+}
+
+.footer a {
+  color: #979494;
+  margin-right: 10px;
 }
 
 .pc .title {

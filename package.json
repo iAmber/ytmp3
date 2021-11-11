@@ -12,6 +12,7 @@
     "clipboard": "^2.0.8",
     "core-js": "^3.6.5",
     "lottie-web": "^5.8.1",
+    "vant": "^2.12.31",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vue-youtube": "^1.4.0"

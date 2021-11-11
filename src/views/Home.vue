@@ -4,8 +4,8 @@
       <div class="home-btn" @click="refresh">HOME</div>
       <div class="theme-btn" @click="changeTheme">THEME[DARK]</div>
     </div>
-    <img v-if="isMobile" class="logo" src="../assets/img/logo200x50.png" />
-    <img v-else class="logo" src="../assets/img/logo240x60.png" />
+    <img v-if="isMobile" class="logo" :src="require('../assets/img/logo200x50_'+mode+'.png')">
+    <img v-else class="logo" :src="require('../assets/img/logo240x60_'+mode+'.png')"/>
     <div class="rank-title">🔥 Top 10 Chart 🔥</div>
     <div class="rank-list">
       <div

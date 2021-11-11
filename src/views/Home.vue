@@ -13,7 +13,8 @@
         :key="index"
         class="rank-item"
       >
-        <div class="rank-index">No.{{index + 1}}</div>
+        <div :ref="'animationel'+index"  class="rank-lottie"></div>
+        <div :ref="'animationel'+index"  class="rank-index">No.{{index + 1}}</div>
         <div class="rank-video">
           <youtube :video-id="item.key" ref="youtube" @playing="playing" @click="playVideo" />
         </div>
@@ -37,6 +38,8 @@
 <script>
 import axios from 'axios';
 import Clipboard from 'clipboard';
+import lottie from 'lottie-web';
+import datajson from '../assets/flag.json';
 
 export default {
   name: 'Home',
@@ -67,9 +70,25 @@ export default {
   },
   async mounted() {
     await this.getCountryCode();
-    this.getList();
+    await this.getList();
+    this.hanelLottieArr();
   },
   methods: {
+    hanelLottieArr() {
+      if (this.list.length) {
+        this.list.forEach((_item, index) => {
+          const s = `animationel${index}`;
+          const container = this.$refs[s];
+          lottie.loadAnimation({
+            container: container[0],
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            animationData: datajson,
+          });
+        });
+      }
+    },
     playVideo() {
       this.player.playVideo();
     },
@@ -89,7 +108,7 @@ export default {
     async getList() {
       const ip = this.getRandomIp();
       const url = `${ip}/rank/${this.country}`;
-      const { data, status } = await axios.get(url);
+      const { data = [], status } = await axios.get(url);
       if (status === 200) {
         this.list = data?.map((item) => ({
           ...item,
@@ -123,7 +142,13 @@ export default {
 </script>
 <style>
 .home.dark {
-  background-color: red;
+  background-color: #162541;
+}
+.home.dark .rank-title{
+  color: #fff;
+}
+.home.dark .rank-item{
+  border: 1px solid #121D31;
 }
 .title{
   height: 40px;
@@ -175,6 +200,14 @@ export default {
   align-items: center;
 }
 
+.rank-item .rank-lottie {
+  position: absolute;
+  left: -7px;
+  top: -8px;
+  width: 91px;
+  height: auto;
+  z-index: 9998;
+}
 .rank-item .rank-index {
   position: absolute;
   left: -7px;
@@ -183,7 +216,6 @@ export default {
   height: 36px;
   line-height: 36px;
   text-align: center;
-  background: #0287CF;
   border-radius: 2px;
   font-family: Roboto-Medium;
   font-size: 16px;
